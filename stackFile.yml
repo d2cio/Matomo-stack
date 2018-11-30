@@ -1,0 +1,68 @@
+version: '1.0'
+services:
+  - name: db
+    type: mariadb
+    version: 10.3
+    configuration: StandAlone
+    database: piwik
+    username: piwik
+    userPassword: null
+    password: null
+    ports:
+      - 3306
+    remoteAccess: false
+    comments:
+      userPassword: Password for user "piwik"
+    deployTo:
+      - matomo
+
+  - name: matomo
+    type: docker
+    image: matomo
+    version: fpm
+    ports:
+      - 9000
+    remoteAccess: false
+    volumes:
+      - directory: /var/www/html/config
+      - directory: /var/www/html/logs
+    deployTo:
+      - matomo
+
+  # - name: pma
+  #   type: php
+  #   version: 7.1
+  #   source:
+  #     type: git
+  #     url: https://github.com/phpmyadmin/phpmyadmin
+  #   extensions:
+  #     - mysqli
+  #     - opcache
+  #   configFiles:
+  #     - dest: $MAIN_PATH/config.inc.php
+  #       src: ./configs/config.inc.php
+  #   localDeps: composer install
+  #   deployTo:
+  #     - ghost
+
+  - name: web
+    type: nginx
+    version: 1.14
+    ports:
+      - 80
+      - 443
+    remoteAccess: true
+    serviceFiles:
+      - name: matomo
+        static: true
+        src: ./configs/matomo.conf
+    # - name: pma
+    #   static: true
+    deployTo:
+      - matomo
+
+hosts:
+  - name: matomo
+    requirements:
+      cores: 1
+      memory: 1
