@@ -10,7 +10,7 @@
 
 ## Demo
 
-<!-- ![How to deploy a stack](https://raw.githubusercontent.com/mastappl/images/master/faveo.gif) -->
+![How to deploy a stack](https://raw.githubusercontent.com/mastappl/images/master/matomo.gif)
 
 ## Minimal recommended configuration:
 
